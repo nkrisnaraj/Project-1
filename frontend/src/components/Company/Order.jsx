@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { FaTrash, FaEdit, FaTruck,FaHome, FaShippingFast, FaCheck,FaSearch } from "react-icons/fa";
+import { FaTrash, FaEdit, FaTruck, FaHome, FaShippingFast, FaCheck, FaSearch } from "react-icons/fa";
 import { MdOutlineHomeWork } from "react-icons/md";
- import DatePicker from "react-datepicker"; // Import DatePicker
- import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker"; // Import DatePicker
+import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import { Modal, Button } from 'react-bootstrap';
 import { useOutletContext } from "react-router-dom";
 import { SlCalender } from "react-icons/sl";
 
 function Order() {
-  const { user } = useOutletContext(); 
+  const { user } = useOutletContext();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,12 +17,34 @@ function Order() {
   const [currentOrderId, setCurrentOrderId] = useState(null); // State to track the current order being edited
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [filteredOrder, setFilteredOrder] = useState([]); 
+  const [filteredOrder, setFilteredOrder] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleShowViewModal = (order) => {
-    setSelectedOrder(order);
-    setShowViewModal(true);
+  const handleShowViewModal = async (order) => {
+    try {
+      axios.get(`http://localhost:8080/backend/api/Customer/get_order_details.php`, {
+        params: {
+          invoiceID: order.orderID,
+          companyOwnerID: user.companyOwnerID
+        },
+        withCredentials: true
+      }) // Fetch items for a specific order
+        .then((response) => {
+          console.log("Fetched order details: ", response.data); // Log the fetched data
+          if (response.data) {
+
+            setSelectedOrder(response.data.items); // Set selected order details
+          }
+        })
+        .catch((error) => console.error('Error fetching order items:', error));
+    } catch (error) {
+      console.error("Error fetching succeeded orders:", error);
+    }
+    if (setSelectedOrder) {
+      console.log("selected : " ,selectedOrder);
+      setShowViewModal(true);
+    }
+    console.log(order);
   };
   const handleCloseViewModal = () => setShowViewModal(false);
 
@@ -41,6 +63,7 @@ function Order() {
             companyOwnerID: user.companyOwnerID,
           }
         );
+        console.log("companyOrders:",response.data);
         if (Array.isArray(response.data)) {
           setOrders(response.data);
           setFilteredOrder(response.data);
@@ -83,23 +106,23 @@ function Order() {
       return order;
     });
     setOrders(updatedOrders);
-  
+
     // Then send a request to update status on the server
     axios.post("http://localhost:8080/backend/api/Company/update_order_status.php", {
-        orderId: orderID, 
-        status: newStatus, 
-      })
+      orderId: orderID,
+      status: newStatus,
+    })
       .then((response) => {
         if (response.data.success) {
           console.log("Order status updated successfully");
           fetchOrderData();
-        } 
+        }
       })
       .catch((error) => {
         console.error("Error updating order status:", error);
       });
   };
-  
+
   const handleDateChange = (date) => {
     setEditingDeliveryDate(date);
   };
@@ -118,17 +141,17 @@ function Order() {
       orderId: orderID,
       deliveryDate: editingDeliveryDate,
     })
-    .then((response) => {
-      if (response.data.success) {
-        console.log("Delivery date updated successfully");
-        fetchOrderData();
-      } else {
-        console.error("Failed to update delivery date:", response.data.message);
-      }
-    })
-    .catch((error) => {
-      console.error("Error updating delivery date:", error);
-    });
+      .then((response) => {
+        if (response.data.success) {
+          console.log("Delivery date updated successfully");
+          fetchOrderData();
+        } else {
+          console.error("Failed to update delivery date:", response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating delivery date:", error);
+      });
 
     setEditingDeliveryDate(null);
     setCurrentOrderId(null);
@@ -146,7 +169,7 @@ function Order() {
         order.customerShopName
           .toLowerCase()
           .includes(e.target.value.toLowerCase()) ||
-          order.orderID
+        order.orderID
           .toString().includes(e.target.value)
       );
       setFilteredOrder(filtered);
@@ -154,11 +177,11 @@ function Order() {
   };
 
   if (loading) return <div>Loading...</div>;
-  if (error) { return <div className="error">{error}</div>;}
+  if (error) { return <div className="error">{error}</div>; }
 
   return (
     <div className="maincontainer ">
-       <div className="table_heading">
+      <div className="table_heading">
         <h3>Order Details</h3>
         {/* Search bar and icon */}
         <div className="search_container">
@@ -171,84 +194,83 @@ function Order() {
           />
           <FaSearch className="search_icon" />
         </div>
-        </div>
+      </div>
       <section className="display_details">
-      {filteredOrder.length > 0 ? (
-         <table className="d-felx">
-          <thead className=" fs-5">
-            <tr>
-              <th>Shop Name</th>
-              <th>Order ID</th>
-              <th>District</th>
-              <th>Order Date</th>
-              <th>Delivery Date</th>
-              <th>Status</th>
-              <th>Quantity</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredOrder.map((order, index) => (
-              <tr key={order.orderID} className="fs-6">
-                <td>{order.customerShopName}</td>
-               <td>{order.orderID}</td>
-                <td>{order.customerDistrict}</td>
-                <td>{formatDate(order.orderDate)}</td>
-                <td>{currentOrderId === order.orderID ? (
-                    <>
-                     <div className="datepicker-wrapper">
-                      <DatePicker
-                        selected={editingDeliveryDate}
-                        onChange={handleDateChange}
-                        dateFormat="yyyy/MM/dd"
-                         className="small-datepicker"
-                      />
-                      </div>
-                      <button className="save-button" onClick={() => saveDeliveryDate(order.orderID)}>Save</button>
-                    </>
-                  ) : (
-                    <>
-                      {formatDate(order.deliveryDate)}
-                      <button onClick={() => {
-                        setCurrentOrderId(order.orderID);
-                        setEditingDeliveryDate(new Date(order.deliveryDate)); // Set  delivery date
-                      }} className="calender-icon">
+        {filteredOrder.length > 0 ? (
+          <table className="d-felx">
+            <thead className=" fs-5">
+              <tr>
+                <th>Shop Name</th>
+                <th>Order ID</th>
+                <th>District</th>
+                <th>Order Date</th>
+                <th>Payment Method</th>
+                <th>Status</th>
+                <th>Total Amount</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredOrder.map((order, index) => (
+                <tr key={`${order.orderID}-${index}`} className="fs-6">
+                  <td>{order.customerShopName}</td>
+                  <td>{order.orderID}</td>
+                  <td>{order.customerDistrict}</td>
+                  <td>{formatDate(order.orderDate)}</td>
+                  <td>{order.paymentMethod ? order.paymentMethod : "Pending"}
+                    {/* {currentOrderId === order.orderID ? (
+                      <>
+                        <div className="datepicker-wrapper">
+                          <DatePicker
+                            selected={editingDeliveryDate || new Date()}
+                            onChange={handleDateChange}
+                            dateFormat="yyyy/MM/dd"
+                            className="small-datepicker"
+                          />
+                        </div>
+                        <button className="save-button" onClick={() => saveDeliveryDate(order.orderID)}>Save</button>
+                      </>
+                    ) : (
+                      <>
+                        {formatDate(order.deliveryDate)}
+                        <button onClick={() => {
+                          setCurrentOrderId(order.orderID);
+                          setEditingDeliveryDate(new Date(order.deliveryDate));
+                        }} className="calender-icon">
+                          <SlCalender />
+                        </button>
+                      </>
+                    )} */}
+                  </td>
+                  <td>
+                    {order.status === 'processing' && <MdOutlineHomeWork />}
+                    {order.status === 'pending' && <FaShippingFast />}
+                    {order.status === 'delivered' && <FaCheck />}
+                    <input
+                      type="range"
+                      min="1"
+                      max="3"
+                      // className={`${ order.status === 'delivered' ? "disabled" : ""}`}
+                      value={order.status === 'processing' ? 1 : order.status === 'pending' ? 2 : 3}
+                      onChange={(e) => {
+                        const status = e.target.value === "1" ? 'processing' : e.target.value === "2" ? 'pending' : 'delivered';
+                        handleStatusChange(order.orderID, status);
+                      }}
+                      disabled={order.status === 'delivered' || order.paymentMethod === null} 
                       
-                        <SlCalender/>
-                      </button>
-                    </>
-                  )}</td>
-                <td>
-                  {order.status === 'processing' && <MdOutlineHomeWork />}
-                  {order.status === 'pending' && <FaShippingFast />}
-                  {order.status === 'delivered' && <FaCheck />}
-                  <input
-                    type="range"
-                    min="1"
-                    max="3"
-                    value={order.status === 'processing' ? 1 : order.status === 'pending' ? 2 : 3}
-                    onChange={(e) => {
-                      const status = e.target.value === "1" ? 'processing' : e.target.value === "2" ? 'pending' : 'delivered';
-                      handleStatusChange(order.orderID, status);
-                    }}
-                  />
-                </td>
-                <td>{order.quantity}</td>
-                <td>
-                   <button
-                      className="btn btn-primary me-1"
-                      onClick={() => handleShowViewModal(order)}
-                    >
+                    />
+                  </td>
+                  <td>Rs.{order.total}</td>
+                  <td>
+                    <button className="btn btn-primary me-1" onClick={() => handleShowViewModal(order)}>
                       view
                     </button>
-                  {/* <button className="btn btn-danger" onClick={() => handleDelete(order.orderId)}>
-                    <FaTrash />
-                  </button> */}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+
+            <tfoot>
               <tr>
                 <td
                   colSpan="8"
@@ -258,7 +280,7 @@ function Order() {
                 </td>
               </tr>
             </tfoot>
-        </table>
+          </table>
         ) : (
           <div className="empty_text">No Orders Available</div>
         )}
@@ -268,47 +290,85 @@ function Order() {
       {selectedOrder && (
         <Modal show={showViewModal} onHide={handleCloseViewModal}>
           <Modal.Header closeButton>
-            <Modal.Title>View Order Details</Modal.Title>
+            <Modal.Title>Order Items of Order ID : {selectedOrder[0].orderID} </Modal.Title>
           </Modal.Header>
-          <Modal.Body style={{ fontSize: "135%" }}>
-            <p>
-              <strong>Order ID:</strong> {selectedOrder.orderID}
-            </p>
-            <p>
-              <strong>Customer Name:</strong> {selectedOrder.customerName}
-            </p>
-            <p>
-              <strong>Shop Name:</strong> {selectedOrder.customerShopName}
-            </p>
-            <p>
-              <strong>Customer Email:</strong> {selectedOrder.email}
-            </p>
-            <p>
-              <strong>Contact Number:</strong> {selectedOrder.customerContactNumber}
-            </p>
-            <p>
-              <strong>Customer Address:</strong> {selectedOrder.customerAddress}
-            </p>
-            <p>
-              <strong>Customer District:</strong> {selectedOrder.customerDistrict}
-            </p>
-            <p>
-              <strong>Order Date:</strong> {selectedOrder.orderDate}
-            </p>
-            <p>
-              <strong>Delivery Date:</strong> {selectedOrder.deliveryDate}
-            </p>
-            <p>
-              <strong>Reference No:</strong>{" "}
-              {selectedOrder.customerShopReferenceNo}
-            </p>
+          <Modal.Body>
+            {Array.isArray(selectedOrder) && selectedOrder.length > 0 ? (
+              <table className="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedOrder.map((item) => (
+                    <tr key={item.orderItemID}>
+                      <td>{item.productName}</td>
+                      <td>Rs. {item.price}</td>
+                      <td>{item.quantity}</td>
+                      <td>Rs. {item.price * item.quantity}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No items found for this order.</p>
+            )}
           </Modal.Body>
+
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseViewModal}>
               Close
             </Button>
           </Modal.Footer>
         </Modal>
+
+        // <Modal show={showViewModal} onHide={handleCloseViewModal}>
+        //   <Modal.Header closeButton>
+        //     <Modal.Title>View Order Details</Modal.Title>
+        //   </Modal.Header>
+        //   <Modal.Body style={{ fontSize: "135%" }}>
+        //     <p>
+        //       <strong>Order ID:</strong> {selectedOrder.orderID}
+        //     </p>
+        //     <p>
+        //       <strong>Customer Name:</strong> {selectedOrder.customerName}
+        //     </p>
+        //     <p>
+        //       <strong>Shop Name:</strong> {selectedOrder.customerShopName}
+        //     </p>
+        //     <p>
+        //       <strong>Customer Email:</strong> {selectedOrder.email}
+        //     </p>
+        //     <p>
+        //       <strong>Contact Number:</strong> {selectedOrder.customerContactNumber}
+        //     </p>
+        //     <p>
+        //       <strong>Customer Address:</strong> {selectedOrder.customerAddress}
+        //     </p>
+        //     <p>
+        //       <strong>Customer District:</strong> {selectedOrder.customerDistrict}
+        //     </p>
+        //     <p>
+        //       <strong>Order Date:</strong> {selectedOrder.orderDate}
+        //     </p>
+        //     <p>
+        //       <strong>Delivery Date:</strong> {selectedOrder.deliveryDate}
+        //     </p>
+        //     <p>
+        //       <strong>Reference No:</strong>{" "}
+        //       {selectedOrder.customerShopReferenceNo}
+        //     </p>
+        //   </Modal.Body>
+        //   <Modal.Footer>
+        //     <Button variant="secondary" onClick={handleCloseViewModal}>
+        //       Close
+        //     </Button>
+        //   </Modal.Footer>
+        // </Modal>
       )}
 
     </div>
