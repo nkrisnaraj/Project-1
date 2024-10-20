@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Orders() {
     const [pendingOrders, setPendingOrders] = useState([]);
@@ -125,11 +126,11 @@ function Orders() {
                                         <td>Rs. {order.total}</td>
                                         <td>{order.orderDate}</td>
                                         <td>
-                                            <Button variant="primary" onClick={() => handleOrderClick(order.orderID, 'pay', order.total)}>
+                                            <Button variant="primary"  onClick={() => handleOrderClick(order.orderID, 'pay', order.total)}>
                                                 {/* <Button variant="primary" onClick={() => navigate('/customer/payment', { state: { invoice: order , totalAmount: order.total} })}> */}
                                                 Pay Now
                                             </Button>
-                                            <Button variant="info" className="ml-2" onClick={() => handleOrderClick(order.orderID, 'view', order.total)}>
+                                            <Button variant="info" className="ms-2" onClick={() => handleOrderClick(order.orderID, 'view', order.total)}>
                                                 View Items
                                             </Button>
                                         </td>
