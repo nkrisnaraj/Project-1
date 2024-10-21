@@ -46,7 +46,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
   
     try {
-        $sql = "SELECT SUM(totalAmount) as total_amount FROM bills WHERE DATE(billDate) = :today";
+        $sql = "SELECT SUM(total) as total_amount FROM orders WHERE DATE(orderDate) = :today";
         $pstmt = $conn->prepare($sql);
         $pstmt->bindParam(':today',$today);
         $pstmt->execute();

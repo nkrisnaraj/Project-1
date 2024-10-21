@@ -142,14 +142,14 @@ function CartItems() {
                     <div
                         className={`place-order-btn ${selectedItems.length > 0 ? "" : "disabled"}`}
                         aria-disabled={!selectedItems.length}
-                        onClick={handlePlaceOrder}
+                        onClick={handlePlaceOrder} style={{fontSize:'130%'}}
                     >Place Order</div>
                 </div>
             </div>
             <div className="cart-body">
                 <table className="cart-table">
                     <thead>
-                        <tr>
+                        <tr style={{fontSize:'160%'}}>
                             <th>Select</th>
                             <th>Product</th>
                             <th>Product Name</th>
@@ -164,7 +164,7 @@ function CartItems() {
                             <tr key={index} className="cart-item-row">
                                 <td>
                                     <input
-                                        type="checkbox"
+                                        type="checkbox" 
                                         checked={selectedItems.some((selected) => selected.id === Item.id)}
                                         onChange={() => toggleItemSelection(Item)}
                                         className='item-checkbox'
@@ -205,7 +205,7 @@ function CartItems() {
                     <Modal.Title>Confirm Your Order</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p style={{fontSize:'130%'}}> Are you sure you want to confirm this order?</p>
+                    <p style={{fontSize:'130%'}}>Are you sure you want to confirm this order?</p>
                     <table className="invoice-table" bordered>
                         <thead>
                             <tr style={{fontSize:'130%'}}>
@@ -217,7 +217,7 @@ function CartItems() {
                         </thead>
                         <tbody>
                             {selectedItems.map((item, index) => (
-                                <tr key={index} className='c-table-tdata'>
+                                <tr key={index} className='c-table-tdata' >
                                     <td>{item.product_name}</td>
                                     <td>{item.price}</td>
                                     <td>{item.quantity}</td>
@@ -226,7 +226,7 @@ function CartItems() {
                             ))}
                             <tr id='tm'>
                                 <td colSpan={3} className="total-amount-cell"><strong>Total Amount:</strong></td>
-                                <td className='total-amount'>{totalAmount}</td>
+                                <td  className='total-amount tm'>{totalAmount}</td>
                             </tr>
                         </tbody>
                     </table>

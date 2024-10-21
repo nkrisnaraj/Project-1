@@ -8,7 +8,13 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 include '../Connection/connection.php';
 
 try{
-    $sql = 'SELECT orders.*, bills.totalAmount FROM orders INNER JOIN bills ON orders.orderID = bills.orderID';
+    $sql = "SELECT customerID, orderDate, SUM(total) AS total, status
+    FROM orders
+    WHERE status IN ('pending', 'delivered','processing')
+    GROUP BY customerID, orderID, orderDate, status
+    ORDER BY orderDate DESC";
+    
+
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC); 

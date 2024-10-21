@@ -23,15 +23,27 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     }
 
     try {
-        $sql = "SELECT COUNT(*) as count FROM orders WHERE status='delivery'";
+        $sql = "SELECT COUNT(*) as count FROM orders WHERE status='delivered'";
         $pstmt = $conn->prepare($sql);
        
         $pstmt->execute();
-        $delivery = $pstmt->fetch(PDO::FETCH_ASSOC);
-        $response['delivery'] = $delivery['count'];
+        $delivered = $pstmt->fetch(PDO::FETCH_ASSOC);
+        $response['delivered'] = $delivered['count'];
         
     } catch (\Throwable $th) {
-        $response['deliveryError'] = 'Error counting delivery';
+        $response['deliveredError'] = 'Error counting delivered';
+    }
+
+    try {
+        $sql = "SELECT COUNT(*) as count FROM orders WHERE status='processing'";
+        $pstmt = $conn->prepare($sql);
+       
+        $pstmt->execute();
+        $processing = $pstmt->fetch(PDO::FETCH_ASSOC);
+        $response['processing'] = $processing['count'];
+        
+    } catch (\Throwable $th) {
+        $response['processingError'] = 'Error counting processing';
     }
 
     

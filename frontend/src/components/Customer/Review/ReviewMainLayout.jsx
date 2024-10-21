@@ -49,33 +49,23 @@ const ReviewMainLayout = () => {
       });
   };
 
-
-const handleReviewSubmit = (userMessage) => {
-    axios.post('http://localhost:8080/backend/api/Customer/reviewdata.php', {
-        productID: productID,
+  const handleReviewSubmit = ({userReview, rating }) => {
+    axios
+      .post("http://localhost:8080/backend/api/Customer/reviewdata.php", {
+        productID: productID, 
         customerID: user.customerID,
-        rating_value: ratingValue,
-        userMessage: userMessage
-    }, {
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-    .then(response => {
-        if (response.data.status === 'success') {
-            setModalShow(false);
-            loadData(productID);
-        } else {
-            console.log("Review Submit Response:", response.data);
-        }
-    })
-    .catch(error => {
-        console.error('There was an error!', error);
-    });
-    
-};
-
-
+        userReview: userReview,
+        rating: rating,
+      })
+      .then((response) => {
+        console.log("Review Submit Response:", response.data);
+        setModalShow(false); 
+        loadData(productID);  
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
   
 
 return (
@@ -125,7 +115,7 @@ return (
         show={modalShow} 
         onHide={() => setModalShow(false)} 
         onSubmit={handleReviewSubmit} 
-        onRatingChange={setRatingValue}
+        onRatingChange={setRatingValue} 
       />
     </div>
   );

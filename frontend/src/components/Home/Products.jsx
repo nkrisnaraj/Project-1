@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link, useNavigate} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './Products.css'; // Import the CSS file for styles
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -26,10 +25,6 @@ const Products = () => {
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
   };
-
-  const handleProductClick = () => {
-    navigate('/login');
-  }
 
   const filteredItems = products.filter(product =>
     product.productName.toLowerCase().includes(searchQuery.toLowerCase())
@@ -59,7 +54,7 @@ const Products = () => {
           {filteredItems.length > 0 ? (
             filteredItems.map((product) => (
               <div key={product.productId} className='col-4 col-sm-3 col-md-2'>
-                <div className='card product-card' onClick={handleProductClick}>
+                <div className='card product-card'>
                   <img
                     src={product.productImage}
                     className='card-img-top product-image'

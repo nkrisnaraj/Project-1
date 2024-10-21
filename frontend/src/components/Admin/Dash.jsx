@@ -93,7 +93,7 @@ const Dash = () => {
         <div className='col-lg-5 col-md-7 mb-4'>
           <div className='card shadow-lg p-4 bg-light rounded-4'>
             <div className='card-body'>
-              <h4 className='text-center'>Order & Delivery</h4>
+              <h4 className='text-center'>Order, Delivery & Processing</h4>
               <Piechart />
             </div>
           </div>
