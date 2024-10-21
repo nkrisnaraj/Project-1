@@ -206,7 +206,7 @@ function Order() {
                 <th>Order Date</th>
                 <th>Payment Method</th>
                 <th>Status</th>
-                <th>Total Amount</th>
+                {/* <th>Total Amount</th> */}
                 <th>Action</th>
               </tr>
             </thead>
@@ -260,7 +260,7 @@ function Order() {
                       
                     />
                   </td>
-                  <td>Rs.{order.total}</td>
+                  {/* <td>Rs.{order.total}</td> */}
                   <td>
                     <button className="btn btn-primary me-1" onClick={() => handleShowViewModal(order)}>
                       view
