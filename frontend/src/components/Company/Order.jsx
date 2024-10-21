@@ -44,6 +44,7 @@ function Order() {
       console.error("Error fetching succeeded orders:", error);
     }
     if (setSelectedOrder) {
+      
       console.log("selected : ", selectedOrder);
       setShowViewModal(true);
     }
@@ -256,8 +257,9 @@ function Order() {
                   <th>Shop Name</th>
                   <th>Order ID</th>
                   <th>District</th>
+                  <th>Address</th>
                   <th>Order Date</th>
-                  <th>Payment Method</th>
+                  {/* <th>Payment Method</th> */}
                   <th>Status</th>
                   <th>Total Amount</th>
                   <th>Action</th>
@@ -269,8 +271,9 @@ function Order() {
                     <td>{order.customerShopName}</td>
                     <td>{order.orderID}</td>
                     <td>{order.customerDistrict}</td>
+                    <td>{order.customerAddress}</td>
                     <td>{formatDate(order.orderDate)}</td>
-                    <td>{order.paymentMethod ? order.paymentMethod : "Pending"}
+                    {/* <td>{order.paymentMethod ? order.paymentMethod : "Pending"}</td> */}
                       {/* {currentOrderId === order.orderID ? (
                       <>
                         <div className="datepicker-wrapper">
@@ -294,7 +297,7 @@ function Order() {
                         </button>
                       </>
                     )} */}
-                    </td>
+                    
                     <td>
                       {order.status === 'processing' && <MdOutlineHomeWork />}
                       {order.status === 'pending' && <FaShippingFast />}
@@ -313,7 +316,7 @@ function Order() {
 
                       />
                     </td>
-                    <td>Rs.{order.total}</td>
+                    <td>Rs.{order.totalAmount}</td>
                     <td>
                       <button className="btn btn-primary me-1" onClick={() => handleShowViewModal(order)}>
                         view
@@ -347,8 +350,11 @@ function Order() {
           </Modal.Header>
           <Modal.Body>
             {Array.isArray(selectedOrder) && selectedOrder.length > 0 ? (
+              
               <table className="table table-bordered">
                 <thead>
+                <h5>Payment Method : {selectedOrder[0].payment}</h5>
+                <h6>Total : <b>Rs.{selectedOrder[0].total}.00</b></h6>
                   <tr>
                     <th>Product Name</th>
                     <th>Price</th>
