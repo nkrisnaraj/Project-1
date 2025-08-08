@@ -71,6 +71,15 @@ Project-1/
        mysql -u root -p < elitez_database.sql
        ```
     - Make sure the PHP extension `pdo_mysql` is enabled in your `php.ini` (remove the `;` from `extension=pdo_mysql`).
+    - **Configure email settings:**
+      - Copy `backend/.env.example` to `backend/.env`
+      - Update the email configuration in `backend/.env` with your SMTP credentials:
+        ```
+        SMTP_USERNAME=your-email@gmail.com
+        SMTP_PASSWORD=your-app-password
+        FROM_EMAIL=your-email@gmail.com
+        ```
+      - For Gmail, use an [App Password](https://support.google.com/accounts/answer/185833) instead of your regular password.
 4. **Run the frontend:**
     ```bash
     npm run dev
@@ -123,6 +132,10 @@ Project-1/
 - **Login not working:**
    - Check browser console and PHP error logs for details.
    - Make sure the database is imported and has the correct tables and sample data.
+- **Email not sending:**
+   - Make sure you have configured the email settings in `backend/.env`.
+   - For Gmail, use an App Password instead of your regular password.
+   - Check that your email credentials are correct and the SMTP server is accessible.
 
 ### Useful Commands
 - Check PHP version: `php -v`
