@@ -38,7 +38,7 @@ Project-1/
 │   ├── src/           # React source code
 │   └── public/        # Static assets
 ├── elitez_database.sql # Database schema (import this to MySQL)
-├── package.json       # Project metadata
+├── frontend/package.json  # Frontend dependencies and scripts
 ├── README.md          # This file
 └── ...
 ```
@@ -59,10 +59,11 @@ Project-1/
     cd Project-1
     ```
 2. **Install frontend dependencies:**
-    ```bash
-    cd frontend
-    npm install
-    ```
+   ```bash
+   cd frontend
+   npm install
+   ```
+   > All dependencies for the React app are managed in `frontend/package.json`. There is no root-level `package.json`.
 3. **Configure backend:**
     - Set up your MySQL database and update credentials in `backend/api/Connection/connection.php`.
     - Import the database schema using the provided `elitez_database.sql` file:
@@ -149,5 +150,19 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ---
 
+
+## Contributors
+Main contributors:
+
+- Krisnaraj Navaraththinasingam — https://github.com/nkrisnaraj
+- Sarujanan — https://github.com/saruj26
+- Nihashini Subatharan — https://github.com/nihasuba
+- Abarna Kumarasamy — https://github.com/AbarnaKumarasamy1122
+- Risnariha — https://github.com/risnariha
+
+See [CONTRIBUTORS.md](./CONTRIBUTORS.md) for more details.
+
+---
+
 ## License
-This project is for educational/demo purposes.
+This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.
