@@ -1,7 +1,10 @@
 
+
 # EliteZ: Inventory Fulfillment and Distribution Platform
 
-EliteZ is a B2B e-commerce and inventory management platform that connects companies (manufacturers) with shop owners (retailers) for product distribution, order management, and analytics.
+EliteZ is a B2B e-commerce and inventory management platform that connects companies (manufacturers) with shop owners (retailers) for product distribution, order management, analytics, and communication.
+
+---
 
 ## Features
 - Multi-role system: Admin, Company, Customer (Shop)
@@ -14,53 +17,122 @@ EliteZ is a B2B e-commerce and inventory management platform that connects compa
 - Analytics dashboard with charts
 - Email integration for notifications
 
+---
+
 ## Tech Stack
 - **Frontend:** React.js (Vite, Material-UI, Bootstrap, Chart.js)
 - **Backend:** PHP (REST API), MySQL
 - **Other:** PHPMailer, CORS, JWT/session-based authentication
 
+---
+
 ## Project Structure
 ```
 Project-1/
 ├── backend/           # PHP API and business logic
+│   ├── api/           # All PHP endpoints (Admin, Company, Customer, Home, etc.)
+│   ├── config/        # CORS and config files
+│   ├── Connection/    # Database connection scripts
+│   └── Phpmailer/     # Email sending library
 ├── frontend/          # React app (Vite)
+│   ├── src/           # React source code
+│   └── public/        # Static assets
+├── elitez_database.sql # Database schema (import this to MySQL)
 ├── package.json       # Project metadata
 ├── README.md          # This file
 └── ...
 ```
 
+---
+
 ## Getting Started
 
 ### Prerequisites
 - Node.js & npm
-- PHP >= 7.4
+- PHP >= 7.4 (with PDO MySQL extension enabled)
 - MySQL
 
 ### Setup
 1. **Clone the repository:**
-   ```bash
-   git clone <repo-url>
-   cd Project-1
-   ```
+    ```bash
+    git clone <repo-url>
+    cd Project-1
+    ```
 2. **Install frontend dependencies:**
-   ```bash
-   cd frontend
-   npm install
-   ```
+    ```bash
+    cd frontend
+    npm install
+    ```
 3. **Configure backend:**
-   - Set up your MySQL database and update credentials in `backend/api/Connection/connection.php`.
-   - Import the database schema (see `/backend` for SQL files if provided).
+    - Set up your MySQL database and update credentials in `backend/api/Connection/connection.php`.
+    - Import the database schema using the provided `elitez_database.sql` file:
+       ```bash
+       mysql -u root -p < elitez_database.sql
+       ```
+    - Make sure the PHP extension `pdo_mysql` is enabled in your `php.ini` (remove the `;` from `extension=pdo_mysql`).
 4. **Run the frontend:**
-   ```bash
-   npm run dev
-   ```
+    ```bash
+    npm run dev
+    ```
 5. **Run the backend:**
-   - Serve the `backend/` folder with a local PHP server (e.g., XAMPP, WAMP, or `php -S localhost:8080 -t backend`)
+         - Open a terminal in your project root and run:
+            ```bash
+            php -S localhost:8080
+            ```
+         - If you use XAMPP/WAMP, make sure to set the document root to the `backend/` folder and configure the port to 8080 to match the frontend API calls. Otherwise, it is recommended to use:
+            ```bash
+            php -S localhost:8080
+            ```
+            for consistent results.
+
+---
 
 ## Usage
 - Access the frontend at `http://localhost:5173`
 - The backend API runs at `http://localhost:8080/backend/api/`
 - Register as a company or shop, wait for admin approval, then log in to access your dashboard.
+- Default test credentials (after importing the SQL):
+   - Admin: `admin@elitez.com` / `password`
+   - Company: `company@elitez.com` / `password`
+   - Customer: `customer@elitez.com` / `password`
+
+---
+
+## Database
+- The full schema is in `elitez_database.sql`.
+- Key tables: `admins`, `companyowners`, `customers`, `registration_requests`, `products`, `orders`, `orderitems`, `invoices`, `payments`, `cart_items`, `contact`, `product_reviews`, `review_table`, `subscriptions`.
+- All foreign key relationships and sample data are included.
+
+---
+
+## Troubleshooting
+
+
+### Common Issues
+- **Network Error / Connection Refused:**
+   - Make sure your PHP backend server is running on port 8080.
+   - Make sure your MySQL server is running and credentials are correct.
+- **PDO Error: could not find driver:**
+   - If you only see `php.ini-development` and `php.ini-production` in your PHP folder (e.g., `C:/php`), copy one of them and rename the copy to `php.ini`.
+   - Open the new `php.ini` in a text editor.
+   - Find the line: `;extension=pdo_mysql` and remove the `;` so it becomes `extension=pdo_mysql`.
+   - Save the file.
+   - Restart your PHP server after making changes.
+   - Run `php -m` and check that `pdo_mysql` appears in the list.
+- **Login not working:**
+   - Check browser console and PHP error logs for details.
+   - Make sure the database is imported and has the correct tables and sample data.
+
+### Useful Commands
+- Check PHP version: `php -v`
+- Check enabled PHP extensions: `php -m`
+- Start PHP server (from project root):
+   ```bash
+   php -S localhost:8080
+   ```
+- Import database: `mysql -u root -p < elitez_database.sql`
+
+---
 
 ## Folder Details
 - `frontend/` - React app source code
@@ -68,9 +140,14 @@ Project-1/
 - `backend/Connection/` - Database connection scripts
 - `backend/config/` - CORS and config files
 - `backend/Phpmailer/` - Email sending library
+- `elitez_database.sql` - MySQL database schema and sample data
+
+---
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+---
 
 ## License
 This project is for educational/demo purposes.
