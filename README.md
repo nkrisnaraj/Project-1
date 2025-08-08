@@ -27,20 +27,145 @@ EliteZ is a B2B e-commerce and inventory management platform that connects compa
 ---
 
 ## Project Structure
+
 ```
 Project-1/
-├── backend/           # PHP API and business logic
-│   ├── api/           # All PHP endpoints (Admin, Company, Customer, Home, etc.)
-│   ├── config/        # CORS and config files
-│   ├── Connection/    # Database connection scripts
-│   └── Phpmailer/     # Email sending library
-├── frontend/          # React app (Vite)
-│   ├── src/           # React source code
-│   └── public/        # Static assets
-├── elitez_database.sql # Database schema (import this to MySQL)
-├── frontend/package.json  # Frontend dependencies and scripts
-├── README.md          # This file
-└── ...
+├── .git/                     # Git version control
+├── .gitignore               # Git ignore file
+├── .htaccess               # Apache configuration
+├── backend/                 # PHP API and business logic
+│   ├── .env.example        # Sample environment file for email credentials
+│   ├── api/                # All PHP endpoints
+│   │   ├── Admin/          # Admin panel endpoints
+│   │   │   ├── Addcompany.php
+│   │   │   ├── Addcustomer.php
+│   │   │   ├── barchart.php
+│   │   │   ├── chart.php
+│   │   │   ├── count.php
+│   │   │   ├── deletecompany.php
+│   │   │   ├── deletecustomer.php
+│   │   │   ├── Getrequestcompany.php
+│   │   │   ├── Getrequestcustomer.php
+│   │   │   ├── Listcompany.php
+│   │   │   ├── Listcustomer.php
+│   │   │   ├── Listproducts.php
+│   │   │   ├── Recentorder.php
+│   │   │   ├── Requestcompany.php
+│   │   │   ├── requestcompanyCounts.php
+│   │   │   ├── Requestcustomer.php
+│   │   │   └── requestcustomerCounts.php
+│   │   ├── Company/         # Company endpoints
+│   │   │   ├── add_product.php
+│   │   │   ├── bar_chart.php
+│   │   │   ├── connect.php
+│   │   │   ├── counts.php
+│   │   │   ├── customer_detail.php
+│   │   │   ├── delete_product.php
+│   │   │   ├── markAsRead.php
+│   │   │   ├── product_review.php
+│   │   │   ├── send_otp.php
+│   │   │   ├── unread.php
+│   │   │   ├── update_delivery_date.php
+│   │   │   ├── update_order_status.php
+│   │   │   ├── update_product.php
+│   │   │   ├── update_profile.php
+│   │   │   ├── view_orders.php
+│   │   │   ├── view_product.php
+│   │   │   ├── LoginRegister/
+│   │   │   │   └── checkCompany.php
+│   │   │   ├── Message/
+│   │   │   │   ├── contact.php
+│   │   │   │   ├── markAsRead.php
+│   │   │   │   ├── message_detail.php
+│   │   │   │   ├── message_list.php
+│   │   │   │   └── unread.php
+│   │   │   └── review/
+│   │   │       ├── review.php
+│   │   │       └── reviewdata.php
+│   │   ├── config/          # Legacy config (CORS)
+│   │   │   └── cors.php
+│   │   ├── Connection/      # Database connection scripts
+│   │   │   ├── connection.php
+│   │   │   └── DbConnector.php
+│   │   ├── Customer/        # Customer endpoints
+│   │   │   ├── action.php
+│   │   │   ├── add_cart_item.php
+│   │   │   ├── cart_items.php
+│   │   │   ├── check_cart_item.php
+│   │   │   ├── generate_invoice.php
+│   │   │   ├── get_order_details.php
+│   │   │   ├── orders.php
+│   │   │   ├── payment.php
+│   │   │   ├── place_order.php
+│   │   │   ├── Products.php
+│   │   │   ├── remove_cart_item.php
+│   │   │   ├── reviewdata.php
+│   │   │   ├── update_cart_quantity.php
+│   │   │   ├── update_profile.php
+│   │   │   └── Message/
+│   │   │       ├── message_info.php
+│   │   │       ├── message_list.php
+│   │   │       ├── message_read.php
+│   │   │       ├── message_unread.php
+│   │   │       └── send_message.php
+│   │   ├── Home/            # Authentication and general endpoints
+│   │   │   ├── ChangePassword.php
+│   │   │   ├── emailVerification.php
+│   │   │   ├── forgotpassword.php
+│   │   │   ├── getProducts.php
+│   │   │   ├── getUserDetails.php
+│   │   │   ├── Login.php
+│   │   │   ├── register.php
+│   │   │   ├── resetpassword.php
+│   │   │   ├── save_email.php
+│   │   │   └── User.php
+│   │   └── Phpmailer/       # Email sending library
+│   │       ├── src/
+│   │       ├── language/
+│   │       └── ...
+│   └── config/              # Configuration files
+│       ├── email_config.php # Centralized email config (uses env vars)
+│       └── env_loader.php   # Loads .env variables
+├── frontend/                # React app (Vite)
+│   ├── .eslintrc.cjs       # ESLint configuration
+│   ├── index.html          # Main HTML file
+│   ├── package.json        # Frontend dependencies and scripts
+│   ├── package-lock.json   # Lock file for dependencies
+│   ├── README.md           # Frontend-specific readme
+│   ├── vite.config.js      # Vite configuration
+│   ├── public/             # Static assets
+│   │   ├── Asset 5.svg
+│   │   ├── contact.jpg
+│   │   ├── Elitez.png
+│   │   ├── Elitez.svg
+│   │   ├── Elitez1.png
+│   │   ├── login1.jpg
+│   │   ├── reg.jpg
+│   │   ├── vite.svg
+│   │   ├── files/
+│   │   │   └── message/
+│   │   └── images/
+│   │       ├── faq-bg.jpg
+│   │       ├── home-bg.jpg
+│   │       ├── login-bg.jpg
+│   │       ├── company/
+│   │       ├── customer/
+│   │       ├── home/
+│   │       └── products/
+│   └── src/                # React source code
+│       ├── App.css
+│       ├── App.jsx
+│       ├── index.css
+│       ├── main.jsx
+│       └── components/
+│           ├── Admin/
+│           ├── Company/
+│           ├── Customer/
+│           └── Home/
+├── elitez_database.sql     # Database schema (import this to MySQL)
+├── README.md               # Main project documentation
+├── CONTRIBUTORS.md         # List of contributors
+└── LICENSE                 # Project license (MIT)
 ```
 
 ---

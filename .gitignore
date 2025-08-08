@@ -49,7 +49,11 @@ composer.lock
 *.tmp
 *.temp
 
-# Public uploads (if any)
-frontend/public/files/
-frontend/public/images/
+# Public uploads - ignore contents but keep directories
+frontend/public/files/message/*
+!frontend/public/files/message/.gitkeep
+frontend/public/images/company/*
+!frontend/public/images/company/.gitkeep
+frontend/public/images/customer/*
+!frontend/public/images/customer/.gitkeep
 
