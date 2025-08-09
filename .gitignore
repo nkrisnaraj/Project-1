@@ -29,9 +29,9 @@ Thumbs.db
 .env
 .env.*
 frontend/.env
-frontend/.env.*
+# frontend/.env.*
 backend/.env
-backend/.env.*
+# backend/.env.*
 
 # PHP
 vendor/
